@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Cleaned active customer records with PII hashed downstream-safe."
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+      - name: hashed_email
+        description: "In-flight SHA-256 hashed email with unique Snowflake destination salt."
+
+  - name: stg_orders
+    description: "Active orders only (cancelled soft-deleted records excluded) with schema-drift safe promo tracking."
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: order_total_gbp
+        data_tests:
+          - not_null
+
+  - name: mart_black_friday_campaign_performance
+    description: "Live trading and campaign mart joining active checkout orders with regional customer profiles."
+    columns:
+      - name: country
+        data_tests:
+          - not_null
+      - name: campaign_name
+        data_tests:
+          - not_null
+      - name: net_revenue_gbp
+        data_tests:
+          - not_null
+
+  - name: mart_customer_activation_cohorts
+    description: "Customer lifetime spend and activation audiences ready for BI, AI agents, and Fivetran Activations."
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+      - name: activation_cohort
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['VIP_HIGH_VALUE', 'PROMO_ENGAGED', 'STANDARD']

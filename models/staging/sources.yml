@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: omnistyle_prod
+    description: "Raw operational e-commerce tables replicated from PostgreSQL into Snowflake via Fivetran log-based CDC."
+    database: FIVETRAN
+    schema: OMNISTYLE_PROD_PUBLIC
+    tables:
+      - name: customers
+        description: "OmniStyle customer directory with in-flight SHA-256 PII hashing applied to email."
+      - name: orders
+        description: "OmniStyle live checkout orders with soft-delete tracking and automated schema drift."

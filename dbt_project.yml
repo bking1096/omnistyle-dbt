@@ -1,0 +1,15 @@
+name: 'omnistyle_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'omnistyle'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+models:
+  omnistyle_analytics:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table
